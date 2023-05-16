@@ -95,3 +95,18 @@ const game = {
 
 const [players1, players2] = game.players;
 const [gk, ...fieldPlayers] = players1;
+const allPlayers = [...players1, ...players2];
+const players1Final = [...players1, "Thiago", "Coutinho", "Perisic"];
+
+const {
+    odds: { team1, x: draw, team2 },
+} = game;
+
+const printGoals = (...players) => {
+    console.log(players);
+    console.log(`${players.length} goals were scored`);
+};
+
+team1 < team2
+    ? console.log("Team2 is more likely to win")
+    : console.log("Team1 is more likely to win");
