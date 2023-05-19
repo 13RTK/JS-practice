@@ -231,12 +231,25 @@ for (const curOdd of gameOdds) {
 console.log(`The average odd is ${sumOdds / gameOdds.length}`);
 
 // 3. Print odds
-const teamArr = [game.team1, game.team2];
-let idx = 0;
-let teamIdx = 0;
-for (const curOdd of gameOdds) {
-    const curPrompt = idx === 1 ? "draw" : `victory ${teamArr[teamIdx++]}`;
-    idx++;
+for (const [team, odd] of Object.entries(game.odds)) {
+    const curTeamStr = team === "x" ? "draw" : `victory ${game[team]}`;
 
-    console.log(`Odd of ${curPrompt} : ${curOdd}`);
+    console.log(`Odd of ${curTeamStr} : ${odd}`);
 }
+
+// Bonus
+const scoreMap = new Map();
+for (const curName of Object.values(game.scored)) {
+    if (scoreMap.has(curName)) {
+        scoreMap.set(curName, scoreMap.get(curName) + 1);
+    } else {
+        scoreMap.set(curName, 1);
+    }
+}
+
+const scorers = {};
+for (const player of game.scored) {
+    scorers[player] ? scorers[player]++ : (scorers[player] = 1);
+}
+
+console.log(scorers);
