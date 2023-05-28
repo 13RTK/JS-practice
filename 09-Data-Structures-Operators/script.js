@@ -193,6 +193,17 @@ const game = {
 //     ? console.log("Team2 is more likely to win")
 //     : console.log("Team1 is more likely to win");
 
+const rest = new Map();
+rest.set("name", "Classico Italiano");
+rest.set(1, "Firenze, Italy");
+
+// // Set part
+// const ordersSet = new Set(["Pasta", "Pizza", "Pizza", "Pizza"]);
+// const staff = ["Waiter", "Chef", "Waiter", "Manager", "Chef"];
+// const staffUnique = [...new Set(staff)];
+
+// console.log(staffUnique);
+
 ///////////////////////////////////////
 // Coding Challenge #2
 
@@ -217,39 +228,39 @@ BONUS: Create an object called 'scorers' which contains the names of the players
 GOOD LUCK 😀
 */
 
-// 1. Looping the game.scored array and print each player
-for (const [idx, curName] of game.scored.entries()) {
-    console.log(`Goal ${idx + 1} : ${curName}`);
-}
+// // 1. Looping the game.scored array and print each player
+// for (const [idx, curName] of game.scored.entries()) {
+//     console.log(`Goal ${idx + 1} : ${curName}`);
+// }
 
-// 2. Calculate the average odd
-let sumOdds = 0;
-const gameOdds = Object.values(game.odds);
-for (const curOdd of gameOdds) {
-    sumOdds += curOdd;
-}
-console.log(`The average odd is ${sumOdds / gameOdds.length}`);
+// // 2. Calculate the average odd
+// let sumOdds = 0;
+// const gameOdds = Object.values(game.odds);
+// for (const curOdd of gameOdds) {
+//     sumOdds += curOdd;
+// }
+// console.log(`The average odd is ${sumOdds / gameOdds.length}`);
 
-// 3. Print odds
-for (const [team, odd] of Object.entries(game.odds)) {
-    const curTeamStr = team === "x" ? "draw" : `victory ${game[team]}`;
+// // 3. Print odds
+// for (const [team, odd] of Object.entries(game.odds)) {
+//     const curTeamStr = team === "x" ? "draw" : `victory ${game[team]}`;
 
-    console.log(`Odd of ${curTeamStr} : ${odd}`);
-}
+//     console.log(`Odd of ${curTeamStr} : ${odd}`);
+// }
 
-// Bonus
-const scoreMap = new Map();
-for (const curName of Object.values(game.scored)) {
-    if (scoreMap.has(curName)) {
-        scoreMap.set(curName, scoreMap.get(curName) + 1);
-    } else {
-        scoreMap.set(curName, 1);
-    }
-}
+// // Bonus
+// const scoreMap = new Map();
+// for (const curName of Object.values(game.scored)) {
+//     if (scoreMap.has(curName)) {
+//         scoreMap.set(curName, scoreMap.get(curName) + 1);
+//     } else {
+//         scoreMap.set(curName, 1);
+//     }
+// }
 
-const scorers = {};
-for (const player of game.scored) {
-    scorers[player] ? scorers[player]++ : (scorers[player] = 1);
-}
+// const scorers = {};
+// for (const player of game.scored) {
+//     scorers[player] ? scorers[player]++ : (scorers[player] = 1);
+// }
 
-console.log(scorers);
+// console.log(scorers);
