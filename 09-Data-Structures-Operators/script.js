@@ -4,6 +4,20 @@
 const flights =
     "_Delayed_Departure;fao93766109;txl2133758440;11:25+_Arrival;bru0943384722;fao93766109;11:45+_Delayed_Arrival;hel7439299980;fao93766109;12:05+_Departure;fao93766109;lis2323639855;12:30";
 
+for (const flight of flights.split("+")) {
+    const flightInfoArr = flight.split(";");
+    console.log(
+        `${flightInfoArr[0].replaceAll("_", " ").trim()} from ${flightInfoArr[1]
+            .slice(0, 3)
+            .toUpperCase()} to ${flightInfoArr[2]
+            .slice(0, 3)
+            .toUpperCase()} (${flightInfoArr[3].slice(
+            0,
+            2
+        )}h${flightInfoArr[3].slice(-2)})`
+    );
+}
+
 // Data needed for first part of the section
 const weekdays = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
 const openingHours = {
@@ -290,6 +304,10 @@ GOOD LUCK 😀
 
 // console.log(scorers);
 
+// let airline = "TAP Air Portugal";
+// airline = airline[0].toUpperCase() + airline.slice(1);
+// console.log(airline);
+
 ///////////////////////////////////////
 // Coding Challenge #3
 
@@ -305,36 +323,90 @@ Let's continue with our football betting app! This time, we have a map with a lo
 GOOD LUCK 😀
 */
 
-const gameEvents = new Map([
-    [17, "⚽️ GOAL"],
-    [36, "🔁 Substitution"],
-    [47, "⚽️ GOAL"],
-    [61, "🔁 Substitution"],
-    [64, "🔶 Yellow card"],
-    [69, "🔴 Red card"],
-    [70, "🔁 Substitution"],
-    [72, "🔁 Substitution"],
-    [76, "⚽️ GOAL"],
-    [80, "⚽️ GOAL"],
-    [92, "🔶 Yellow card"],
-]);
+// const gameEvents = new Map([
+//     [17, "⚽️ GOAL"],
+//     [36, "🔁 Substitution"],
+//     [47, "⚽️ GOAL"],
+//     [61, "🔁 Substitution"],
+//     [64, "🔶 Yellow card"],
+//     [69, "🔴 Red card"],
+//     [70, "🔁 Substitution"],
+//     [72, "🔁 Substitution"],
+//     [76, "⚽️ GOAL"],
+//     [80, "⚽️ GOAL"],
+//     [92, "🔶 Yellow card"],
+// ]);
 
-// 1. Create an array contains no duplicate game events
-const events = [...new Set(gameEvents.values())];
+// // 1. Create an array contains no duplicate game events
+// const events = [...new Set(gameEvents.values())];
 
-// 2. Remove the unfair yellow card
-gameEvents.delete(64);
+// // 2. Remove the unfair yellow card
+// gameEvents.delete(64);
 
-// 3. Print average time
-console.log(
-    `An event happened, on average, every ${Math.trunc(
-        90 / gameEvents.size
-    )} minutes`
-);
+// // 3. Print average time
+// console.log(
+//     `An event happened, on average, every ${Math.trunc(
+//         90 / gameEvents.size
+//     )} minutes`
+// );
 
-// 4. Loop print
-for (const [key, value] of gameEvents.entries()) {
-    const halfPrompt = key <= 45 ? "FIRST" : "SECOND";
+// // 4. Loop print
+// for (const [key, value] of gameEvents.entries()) {
+//     const halfPrompt = key <= 45 ? "FIRST" : "SECOND";
 
-    console.log(`[${halfPrompt} HALF] ${key}: ${value}`);
-}
+//     console.log(`[${halfPrompt} HALF] ${key}: ${value}`);
+// }
+
+///////////////////////////////////////
+// Coding Challenge #4
+
+/* 
+Write a program that receives a list of variable names written in underscore_case and convert them to camelCase.
+
+The input will come from a textarea inserted into the DOM (see code below), and conversion will happen when the button is pressed.
+
+THIS TEST DATA (pasted to textarea)
+underscore_case
+ first_name
+Some_Variable 
+  calculate_AGE
+delayed_departure
+
+SHOULD PRODUCE THIS OUTPUT (5 separate console.log outputs)
+underscoreCase      ✅
+firstName           ✅✅
+someVariable        ✅✅✅
+calculateAge        ✅✅✅✅
+delayedDeparture    ✅✅✅✅✅
+
+HINT 1: Remember which character defines a new line in the textarea 😉
+HINT 2: The solution only needs to work for a variable made out of 2 words, like a_b
+HINT 3: Start without worrying about the ✅. Tackle that only after you have the variable name conversion working 😉
+HINT 4: This challenge is difficult on purpose, so start watching the solution in case you're stuck. Then pause and continue!
+
+Afterwards, test with your own test data!
+
+GOOD LUCK 😀
+*/
+
+// let outputCnt = 1;
+// document.body.append(document.createElement("textarea"));
+// document.body.append(document.createElement("button"));
+
+// document.querySelector("button").addEventListener("click", () => {
+//     // Get the each row string
+//     const textArr = document.querySelector("textarea").value.split("\n");
+
+//     // Traverse each text
+//     textArr.forEach((text) => {
+//         const textLowerCase = text.trim().toLowerCase();
+//         const underscoreIdx = textLowerCase.indexOf("_");
+
+//         const fixedText =
+//             textLowerCase.slice(0, underscoreIdx) +
+//             textLowerCase[underscoreIdx + 1].toUpperCase() +
+//             textLowerCase.slice(underscoreIdx + 2);
+
+//         console.log(fixedText.padEnd(20, " ") + "✅".repeat(outputCnt++));
+//     });
+// });
