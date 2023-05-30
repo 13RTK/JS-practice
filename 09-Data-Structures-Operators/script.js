@@ -362,7 +362,6 @@ GOOD LUCK 😀
 
 /* 
 Write a program that receives a list of variable names written in underscore_case and convert them to camelCase.
-
 The input will come from a textarea inserted into the DOM (see code below), and conversion will happen when the button is pressed.
 
 THIS TEST DATA (pasted to textarea)
@@ -389,24 +388,24 @@ Afterwards, test with your own test data!
 GOOD LUCK 😀
 */
 
-// let outputCnt = 1;
-// document.body.append(document.createElement("textarea"));
-// document.body.append(document.createElement("button"));
+let outputCnt = 1;
+document.body.append(document.createElement("textarea"));
+document.body.append(document.createElement("button"));
 
-// document.querySelector("button").addEventListener("click", () => {
-//     // Get the each row string
-//     const textArr = document.querySelector("textarea").value.split("\n");
+document.querySelector("button").addEventListener("click", () => {
+    // Get the each row string
+    const textArr = document.querySelector("textarea").value.split("\n");
 
-//     // Traverse each text
-//     textArr.forEach((text) => {
-//         const textLowerCase = text.trim().toLowerCase();
-//         const underscoreIdx = textLowerCase.indexOf("_");
+    // Traverse each text
+    textArr.forEach((text) => {
+        const textLowerCase = text.trim().toLowerCase();
+        const underscoreIdx = textLowerCase.indexOf("_");
 
-//         const fixedText =
-//             textLowerCase.slice(0, underscoreIdx) +
-//             textLowerCase[underscoreIdx + 1].toUpperCase() +
-//             textLowerCase.slice(underscoreIdx + 2);
+        const fixedText =
+            textLowerCase.slice(0, underscoreIdx) +
+            textLowerCase[underscoreIdx + 1].toUpperCase() +
+            textLowerCase.slice(underscoreIdx + 2);
 
-//         console.log(fixedText.padEnd(20, " ") + "✅".repeat(outputCnt++));
-//     });
-// });
+        console.log(fixedText.padEnd(20, " ") + "✅".repeat(outputCnt++));
+    });
+});
