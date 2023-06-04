@@ -201,44 +201,115 @@ BONUS TEST DATA 2: [1, 5, 3, 9, 6, 1]
 GOOD LUCK 😀
 */
 
-const poll = {
-    question: "What is your favourite programming language?",
-    options: ["0: JavaScript", "1: Python", "2: Rust", "3: C++"],
-    answers: new Array(4).fill(0),
+// const poll = {
+//     question: "What is your favourite programming language?",
+//     options: ["0: JavaScript", "1: Python", "2: Rust", "3: C++"],
+//     answers: new Array(4).fill(0),
 
-    // 1. Create function and receive the input
-    registerNewAnswer() {
-        const input = prompt(`${this.question}\n${this.options.join("\n")}`);
+//     // 1. Create function and receive the input
+//     registerNewAnswer() {
+//         const input = prompt(`${this.question}\n${this.options.join("\n")}`);
 
-        // Increase the array element
-        if (input <= this.answers.length) {
-            this.answers[input]++;
-        }
+//         // Increase the array element
+//         if (input <= this.answers.length) {
+//             this.answers[input]++;
+//         }
 
-        // 4. Call the method
-        this.displayResults(typeof input);
-    },
+//         // 4. Call the method
+//         this.displayResults(typeof input);
+//     },
 
-    // 3. Create function to display the answers
-    displayResults(type) {
-        if (type === "string") {
-            console.log(
-                `Poll results are ${String(this.answers)
-                    .replace("[", "")
-                    .replace("]", "")}`
-            );
-            return;
-        }
+//     // 3. Create function to display the answers
+//     displayResults(type) {
+//         if (type === "string") {
+//             console.log(
+//                 `Poll results are ${String(this.answers)
+//                     .replace("[", "")
+//                     .replace("]", "")}`
+//             );
+//             return;
+//         }
 
-        console.log(this.answers);
-    },
-};
+//         console.log(this.answers);
+//     },
+// };
 
-// 2. Bind the answer poll button
-document
-    .querySelector(".poll")
-    .addEventListener("click", poll.registerNewAnswer.bind(poll));
+// // 2. Bind the answer poll button
+// document
+//     .querySelector(".poll")
+//     .addEventListener("click", poll.registerNewAnswer.bind(poll));
 
-// Bonus part
-poll.displayResults.call({ answers: [5, 2, 3] }, "string");
-poll.displayResults.call({ answers: [1, 5, 3, 9, 6, 1] }, "string");
+// // Bonus part
+// poll.displayResults.call({ answers: [5, 2, 3] }, "string");
+// poll.displayResults.call({ answers: [1, 5, 3, 9, 6, 1] }, "string");
+
+// IIFE (immediately invoke function expression)
+// (function () {
+//     console.log("The function only run once");
+//     const priveNum = 23;
+// })();
+
+////////////////////
+// Closures
+// const secureBooking = () => {
+//     let passengerCount = 0;
+
+//     return function () {
+//         passengerCount++;
+//         console.log(`${passengerCount} passengers`);
+//     };
+// };
+
+// const booker = secureBooking();
+// booker();
+// booker();
+// booker();
+
+// console.dir(booker);
+
+/////////////////
+// Closures example1
+// let f;
+
+// const g = () => {
+//     const a = 23;
+//     f = () => {
+//         console.log(a * 2);
+//     };
+// };
+
+// const h = () => {
+//     const b = 777;
+//     f = () => {
+//         console.log(b * 2);
+//     };
+// };
+
+// g();
+// h();
+// f();
+// console.log(f);
+
+// // Closures example2
+// const boardPassengers = function (n, wait) {
+//     // const perGroup = n / 3;
+
+//     setTimeout(() => {
+//         console.log(`We are now boarding all ${n} passengers`);
+//         console.log(`There are 3 groups, each with ${perGroup} passengers`);
+//     }, wait * 1000);
+
+//     console.log(`Will start boarding in ${wait} seconds`);
+// };
+
+// const perGroup = 1000;
+// boardPassengers(180, 3);
+
+(function () {
+    const header = document.querySelector("h1");
+    header.style.color = "red";
+
+    document.querySelector("body").addEventListener("click", () => {
+        header.style.color = "blue";
+    });
+})();
