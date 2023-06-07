@@ -80,7 +80,33 @@ const displayMovements = (movements) => {
         containerMovements.insertAdjacentHTML("afterbegin", html);
     });
 };
+
+const calcDisplayBalance = (movements) => {
+    const balance = movements.reduce(
+        (accumulator, curVal) => accumulator + curVal,
+        0
+    );
+
+    labelBalance.textContent = `${balance} EUR`;
+};
+
+//////////////////////////////////////////////
+// Map usage function
+const createUsernames = (accounts) => {
+    accounts.forEach((curAccount) => {
+        curAccount.username = curAccount.owner
+            .toLowerCase()
+            .split(" ")
+            .map((curPart) => curPart[0])
+            .join("");
+    });
+};
+
 displayMovements(account1.movements);
+
+createUsernames(accounts);
+
+calcDisplayBalance(account1.movements);
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
@@ -150,25 +176,97 @@ TEST DATA 2: Julia's data [9, 16, 6, 8, 3], Kate's data [10, 5, 6, 1, 4]
 GOOD LUCK 😀
 */
 
-const dogsJulia = [3, 5, 2, 12, 7];
-const dogsKate = [4, 1, 15, 8, 3];
-const checkDogs = (dogsJulia, dogsKate) => {
-    // 1. Remove the first and last two dogs in the shallow copy array
-    const dogsJuliaCopy = dogsJulia.slice().splice(1, dogsJulia.length - 2);
+// const dogsJulia = [3, 5, 2, 12, 7];
+// const dogsKate = [4, 1, 15, 8, 3];
+// const checkDogs = (dogsJulia, dogsKate) => {
+//     // 1. Remove the first and last two dogs in the shallow copy array
+//     const dogsJuliaCopy = dogsJulia.slice().splice(1, dogsJulia.length - 2);
 
-    // 2. Merget the two arrays
-    const dogs = [...dogsJuliaCopy, ...dogsKate];
+//     // 2. Merget the two arrays
+//     const dogs = [...dogsJuliaCopy, ...dogsKate];
 
-    // 3. Log to console
-    dogs.forEach((dogAge, idx, _) => {
-        const usualPrompt = `Dog number ${idx + 1} `;
-        const dogAgePrompt =
-            dogAge < 3
-                ? "is still a puppy 🐶"
-                : `is an adult, and is ${dogAge} years old`;
+//     // 3. Log to console
+//     dogs.forEach((dogAge, idx, _) => {
+//         const usualPrompt = `Dog number ${idx + 1} `;
+//         const dogAgePrompt =
+//             dogAge < 3
+//                 ? "is still a puppy 🐶"
+//                 : `is an adult, and is ${dogAge} years old`;
 
-        console.log(usualPrompt + dogAgePrompt);
-    });
+//         console.log(usualPrompt + dogAgePrompt);
+//     });
+// };
+
+// checkDogs(dogsJulia, dogsKate);
+
+/////////////////////
+// Map function
+// const eurToUsd = 1.1;
+
+// const movementsUSD = movements.map((curMovement) => curMovement * eurToUsd);
+// console.log(movements);
+// console.log(movementsUSD);
+
+// const movementsDescription = movements.map((mov, idx, _) => {
+//     `Movement ${idx + 1}: You ${mov > 0 ? "deposited" : "withdrew"} ${Math.abs(
+//         mov
+//     )}`;
+// });
+
+/////////////////////
+// Filter
+// const deposits = movements.filter((mov) => mov > 0);
+// console.log(deposits);
+// const withdrawals = movements.filter((mov) => mov < 0);
+
+/////////////////////
+// Reduce part
+// const balance = movements.reduce(
+//     (accumulator, curVal, idx, arr) => accumulator + curVal,
+//     0
+// );
+
+// const max = movements.reduce(
+//     (accumulator, curVal) => (accumulator = Math.max(curVal, accumulator)),
+//     Number.MIN_VALUE
+// );
+// console.log(max);
+
+///////////////////////////////////////
+// Coding Challenge #2
+
+/* 
+Let's go back to Julia and Kate's study about dogs. This time, they want to convert dog ages to human ages and calculate the average age of the dogs in their study.
+
+Create a function 'calcAverageHumanAge', which accepts an arrays of dog's ages ('ages'), and does the following things in order:
+
+1. Calculate the dog age in human years using the following formula: if the dog is <= 2 years old, humanAge = 2 * dogAge. If the dog is > 2 years old, humanAge = 16 + dogAge * 4.
+2. Exclude all dogs that are less than 18 human years old (which is the same as keeping dogs that are at least 18 years old)
+3. Calculate the average human age of all adult dogs (you should already know from other challenges how we calculate averages 😉)
+4. Run the function for both test datasets
+
+TEST DATA 1: [5, 2, 4, 1, 15, 8, 3]
+TEST DATA 2: [16, 6, 10, 5, 6, 1, 4]
+
+GOOD LUCK 😀
+*/
+const dogs = [5, 2, 4, 1, 15, 8, 3];
+const calcAverageHumanAge = (dogs) => {
+    // 1. Get the converted age array
+    let convertedAgeArr = dogs.map((curAge) =>
+        curAge <= 2 ? 2 * curAge : 16 + curAge * 4
+    );
+    console.log(convertedAgeArr);
+
+    // 2. Exclude the less then 18 dogs
+    convertedAgeArr = convertedAgeArr.filter((curAge) => curAge >= 18);
+    console.log(convertedAgeArr);
+
+    // 3. Calculate the average age
+    const averageAge =
+        convertedAgeArr.reduce((accumulator, curVal) => accumulator + curVal) /
+        convertedAgeArr.length;
+    console.log(averageAge);
 };
 
-checkDogs(dogsJulia, dogsKate);
+calcAverageHumanAge(dogs);
