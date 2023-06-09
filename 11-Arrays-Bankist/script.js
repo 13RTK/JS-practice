@@ -73,9 +73,9 @@ const displayMovements = (movements) => {
             <div class="movements__type movements__type--${type}">${
             idx + 1
         } ${type}</div>
-            <div class="movements__value">${movement}</div>
+            <div class="movements__value">${movement}€</div>
         </div>`;
-        console.log(html);
+        // console.log(html);
 
         containerMovements.insertAdjacentHTML("afterbegin", html);
     });
@@ -87,7 +87,28 @@ const calcDisplayBalance = (movements) => {
         0
     );
 
-    labelBalance.textContent = `${balance} EUR`;
+    labelBalance.textContent = `${balance}€`;
+};
+
+const calcDisplaySummary = (account) => {
+    const incomes = account.movements
+        .filter((mov) => mov > 0)
+        .reduce((acc, mov) => acc + mov, 0);
+
+    labelSumIn.textContent = `${incomes}€`;
+
+    const outs = movements
+        .filter((mov) => mov < 0)
+        .reduce((acc, mov) => acc + mov, 0);
+
+    labelSumOut.textContent = `${Math.abs(outs)}€`;
+
+    const interest = movements
+        .filter((mov) => mov > 0)
+        .map((deposit) => deposit * account.interestRate)
+        .reduce((acc, curVal) => acc + curVal, 0);
+
+    labelSumInterest.textContent = `${interest}€`;
 };
 
 //////////////////////////////////////////////
@@ -102,22 +123,52 @@ const createUsernames = (accounts) => {
     });
 };
 
-displayMovements(account1.movements);
-
 createUsernames(accounts);
 
-calcDisplayBalance(account1.movements);
+// Event handler
+let curAccount;
+
+btnLogin.addEventListener("click", (event) => {
+    // Prevent the default form from submitting
+    event.preventDefault();
+
+    // Get the current account
+    let curAccount = accounts.find(
+        (acc) => acc.username === inputLoginUsername.value
+    );
+
+    if (curAccount?.pin === Number(inputLoginPin.value)) {
+        // Welcome message
+        labelWelcome.textContent = `Welcome back, ${
+            curAccount.owner.split(" ")[0]
+        }`;
+        containerApp.style.opacity = 100;
+
+        // Clear input content
+        inputLoginUsername.value = inputLoginPin.value = "";
+        inputLoginPin.blur();
+
+        // Display movements
+        displayMovements(curAccount.movements);
+
+        // Display balance
+        calcDisplayBalance(curAccount.movements);
+
+        // Display summary
+        calcDisplaySummary(curAccount);
+    }
+});
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
 
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 // const currencies = new Map([
 //     ["USD", "United States dollar"],
 //     ["EUR", "Euro"],
 //     ["GBP", "Pound sterling"],
 // ]);
-const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /////////////////////////////////////////////////
 
@@ -250,23 +301,52 @@ TEST DATA 2: [16, 6, 10, 5, 6, 1, 4]
 
 GOOD LUCK 😀
 */
-const dogs = [5, 2, 4, 1, 15, 8, 3];
-const calcAverageHumanAge = (dogs) => {
-    // 1. Get the converted age array
-    let convertedAgeArr = dogs.map((curAge) =>
-        curAge <= 2 ? 2 * curAge : 16 + curAge * 4
-    );
-    console.log(convertedAgeArr);
+// const dogs = [5, 2, 4, 1, 15, 8, 3];
+// const calcAverageHumanAge = (dogs) => {
+//     // 1. Get the converted age array
+//     let convertedAgeArr = dogs.map((curAge) =>
+//         curAge <= 2 ? 2 * curAge : 16 + curAge * 4
+//     );
+//     console.log(convertedAgeArr);
 
-    // 2. Exclude the less then 18 dogs
-    convertedAgeArr = convertedAgeArr.filter((curAge) => curAge >= 18);
-    console.log(convertedAgeArr);
+//     // 2. Exclude the less then 18 dogs
+//     convertedAgeArr = convertedAgeArr.filter((curAge) => curAge >= 18);
+//     console.log(convertedAgeArr);
 
-    // 3. Calculate the average age
-    const averageAge =
-        convertedAgeArr.reduce((accumulator, curVal) => accumulator + curVal) /
-        convertedAgeArr.length;
-    console.log(averageAge);
-};
+//     // 3. Calculate the average age
+//     const averageAge =
+//         convertedAgeArr.reduce((accumulator, curVal) => accumulator + curVal) /
+//         convertedAgeArr.length;
+//     console.log(averageAge);
+// };
 
-calcAverageHumanAge(dogs);
+// calcAverageHumanAge(dogs);
+
+///////////////////////////////////////
+// Chain functions
+// const eurToUsd = 1.1;
+// const totalDeposited = movements
+//     .filter((mov) => mov > 0)
+//     .map((mov) => mov * eurToUsd)
+//     .reduce((accumulator, curVal) => curVal + accumulator, 0);
+
+// console.log(totalDeposited);
+
+///////////////////////////////////////
+// Coding Challenge #3
+
+/* 
+Rewrite the 'calcAverageHumanAge' function from the previous challenge, but this time as an arrow function, and using chaining!
+
+TEST DATA 1: [5, 2, 4, 1, 15, 8, 3]
+TEST DATA 2: [16, 6, 10, 5, 6, 1, 4]
+
+GOOD LUCK 😀
+*/
+
+// const calcAverageHumanAge = (dogs) => {
+//     return dogs
+//         .map((curAge) => (curAge <= 2 ? 2 * curAge : 16 + curAge * 4))
+//         .filter((curAge) => curAge >= 18)
+//         .reduce((acc, curVal, _, arr) => acc + curVal / arr.length, 0);
+// };
