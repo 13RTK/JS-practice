@@ -81,19 +81,26 @@ const inputClosePin = document.querySelector(".form__input--pin");
 /////////////////////////////////////////////////
 // Functions
 
-const displayMovements = function (movements, sort = false) {
+const displayMovements = function (acc, sort = false) {
     containerMovements.innerHTML = "";
 
-    const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+    const movs = sort
+        ? acc.movements.slice().sort((a, b) => a - b)
+        : acc.movements;
 
     movs.forEach((mov, i) => {
         const type = mov > 0 ? "deposit" : "withdrawal";
+        const date = new Date(acc.movementsDates[i]);
+        const displayDate = `${date.getDate()}/${
+            date.getMonth() + 1
+        }/${date.getFullYear()}`;
 
         const html = `
       <div class="movements__row">
         <div class="movements__type movements__type--${type}">${
             i + 1
         } ${type}</div>
+        <div class="movements__date">${displayDate}</div>
         <div class="movements__value">${mov.toFixed(2)}€</div>
       </div>
     `;
@@ -142,7 +149,7 @@ createUsernames(accounts);
 
 const updateUI = function (acc) {
     // Display movements
-    displayMovements(acc.movements);
+    displayMovements(acc);
 
     // Display balance
     calcDisplayBalance(acc);
@@ -162,7 +169,7 @@ btnLogin.addEventListener("click", function (e) {
     currentAccount = accounts.find(
         (acc) => acc.username === inputLoginUsername.value
     );
-    console.log(currentAccount);
+    // console.log(currentAccount);
 
     if (currentAccount?.pin === Number(inputLoginPin.value)) {
         // Display UI and message
@@ -174,6 +181,14 @@ btnLogin.addEventListener("click", function (e) {
         // Clear input fields
         inputLoginUsername.value = inputLoginPin.value = "";
         inputLoginPin.blur();
+
+        const now = new Date();
+        const day = `${now.getDate()}`.padStart(2, 0);
+        const month = `${now.getMonth() + 1}`.padStart(2, 0);
+        const year = `${now.getFullYear()}`;
+        const hour = `${now.getHours()}`.padStart(2, 0);
+        const minute = `${now.getMinutes()}`.padStart(2, 0);
+        labelDate.textContent = `${day}/${month}/${year}, ${hour}:${minute}`;
 
         // Update UI
         updateUI(currentAccount);
@@ -198,6 +213,10 @@ btnTransfer.addEventListener("click", function (e) {
         currentAccount.movements.push(-amount);
         receiverAcc.movements.push(amount);
 
+        // Add date
+        currentAccount.movementsDates.push(new Date().toISOString());
+        receiverAcc.movementsDates.push(new Date().toISOString());
+
         // Update UI
         updateUI(currentAccount);
     }
@@ -214,6 +233,7 @@ btnLoan.addEventListener("click", function (e) {
     ) {
         // Add movement
         currentAccount.movements.push(amount);
+        currentAccount.movementsDates.push(new Date().toISOString());
 
         // Update UI
         updateUI(currentAccount);
@@ -231,7 +251,7 @@ btnClose.addEventListener("click", function (e) {
         const index = accounts.findIndex(
             (acc) => acc.username === currentAccount.username
         );
-        console.log(index);
+        // console.log(index);
         // .indexOf(23)
 
         // Delete account
@@ -247,7 +267,7 @@ btnClose.addEventListener("click", function (e) {
 let sorted = false;
 btnSort.addEventListener("click", function (e) {
     e.preventDefault();
-    displayMovements(currentAccount.movements, !sorted);
+    displayMovements(currentAccount, !sorted);
     sorted = !sorted;
 });
 
@@ -277,3 +297,30 @@ btnSort.addEventListener("click", function (e) {
 
 // console.log(2 ** 53 - 1);
 // console.log(Number.MAX_SAFE_INTEGER);
+
+/*
+// Create date
+const now = new Date();
+console.log(now);
+
+console.log(new Date("Jan 01 2023 12:00:00"));
+console.log(new Date(account1.movementsDates[0]));
+console.log(new Date(2077, 2, 31));
+
+const future = new Date(2021, 3, 21);
+console.log(future.getFullYear());
+console.log(future.getMonth());
+console.log(future.getDate());
+console.log(future.getDay());
+console.log(future.getHours());
+console.log(future.getMinutes());
+console.log(future.getSeconds());
+console.log(future.toISOString());
+console.log(future.getTime());
+*/
+
+// Get the timestemp for now
+// console.log(Date.now());
+// future.setFullYear(2077);
+
+// Calculate date
