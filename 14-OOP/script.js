@@ -232,6 +232,7 @@ DATA CAR 1: 'Tesla' going at 120 km/h, with a charge of 23%
 GOOD LUCK 😀
 */
 
+/*
 const Car = function (make, speed) {
     this.make = make;
     this.speed = speed;
@@ -266,3 +267,222 @@ EV.prototype.accelerate = function () {
 
 const tesla = new EV("Tesla", 0, 100);
 tesla.accelerate();
+*/
+
+////////////////////////////////////////////////
+// Inheritance in ES6 Class
+/*
+class PersonCl {
+    constructor(fullName, birthYear) {
+        this.fullName = fullName;
+        this.birthYear = birthYear;
+    }
+
+    calcAge() {
+        return new Date().getFullYear() - this.birthYear + 1;
+    }
+
+    get age() {
+        return this.calcAge();
+    }
+
+    set fullName(name) {
+        if (name.includes(" ")) {
+            this._fullName = name;
+        } else {
+            console.error(`${name} is not a full name`);
+        }
+    }
+
+    get fullName() {
+        return this._fullName;
+    }
+
+    // Static method
+    static hey() {
+        console.log("Hey there!");
+    }
+}
+
+class StudentCl extends PersonCl {
+    constructor(fullName, birthYear, course) {
+        // Always call first
+        super(fullName, birthYear);
+        this.course = course;
+    }
+
+    introduce() {
+        console.log(`My name is ${this.fullName} and I study ${this.course}`);
+    }
+
+    calcAge() {
+        console.log(
+            `I'm ${
+                new Date().getFullYear() - this.birthYear
+            } years old, but as a student I feel more like ${
+                new Date().getFullYear() - this.birthYear + 10
+            }`
+        );
+    }
+}
+
+const martha = new StudentCl("martha jones", 2012, "CS");
+martha.calcAge();
+martha.introduce();
+
+*/
+
+////////////////////////////////////////////////
+// Inheritance in ES6 Class : Object.create
+/*
+const PersonProto = {
+    calcAge() {
+        return new Date().getFullYear() - this.birthYear;
+    },
+
+    init(firstName, birthYear) {
+        this.firstName = firstName;
+        this.birthYear = birthYear;
+    },
+};
+
+const steven = Object.create(PersonProto);
+
+const StudetProto = Object.create(PersonProto);
+StudetProto.init = function (firstName, birthYear, course) {
+    PersonProto.init.call(this, firstName, birthYear);
+    this.course = course;
+};
+
+const jay = Object.create(StudetProto);
+jay.init("jay", 2010, "CS");
+console.log(jay.calcAge());
+console.dir(jay.__proto__.__proto__.__proto__);
+*/
+
+///////////////////////////////////////////////
+// Truly private
+/*
+class Account {
+    // Private fields
+    #movements = [];
+    #pin;
+
+    constructor(owner, currency, pin) {
+        this.owner = owner;
+        this.currency = currency;
+        this.#pin = pin;
+
+        console.log(`Thanks for opening an account, ${owner}`);
+    }
+
+    getMovements() {
+        return this.#movements;
+    }
+
+    deposit(val) {
+        this.#movements.push(val);
+
+        return this;
+    }
+
+    withdraw(val) {
+        this.deposit(-val);
+
+        return this;
+    }
+
+    static #helper() {
+        console.log("Help!");
+    }
+
+    #approveLoan(val) {
+        return true;
+    }
+
+    requestLoan(val) {
+        if (this.#approveLoan(val)) {
+            this.deposit(val);
+            console.log(`Loan approved : ${val}`);
+        }
+
+        return this;
+    }
+}
+
+const acc1 = new Account("Steven", "USD", 1111);
+acc1.requestLoan(1000);
+console.log(acc1.getMovements());
+console.dir(acc1);
+
+// Chaining
+acc1.deposit(300).deposit(500).withdraw(35).requestLoan(25000).withdraw(4000);
+*/
+
+///////////////////////////////////////
+// Coding Challenge #4
+
+/* 
+1. Re-create challenge #3, but this time using ES6 classes: create an 'EVCl' child class of the 'CarCl' class
+2. Make the 'charge' property private;
+3. Implement the ability to chain the 'accelerate' and 'chargeBattery' methods of this class, and also update the 'brake' method in the 'CarCl' class. They experiment with chining!
+
+DATA CAR 1: 'Rivian' going at 120 km/h, with a charge of 23%
+
+GOOD LUCK 😀
+*/
+
+class CarCl {
+    make;
+    speed;
+
+    constructor(make, speed) {
+        this.make = make;
+        this.speed = speed;
+    }
+
+    acclerate() {
+        this.speed += 10;
+
+        return this;
+    }
+
+    brake() {
+        this.speed -= 5;
+
+        return this;
+    }
+}
+
+class EVCl extends CarCl {
+    #charge;
+
+    constructor(make, speed, charge) {
+        super(make, speed);
+        this.#charge = charge;
+    }
+
+    acclerate() {
+        if (this.#charge > 0) {
+            super.acclerate();
+            this.#charge--;
+        }
+
+        return this;
+    }
+
+    chargeBattery() {
+        this.#charge = 100;
+
+        return this;
+    }
+
+    getCharge() {
+        return this.#charge;
+    }
+}
+
+const tesla = new EVCl("tesla", 0, 100);
+tesla.chargeBattery().acclerate().brake().acclerate;
+console.log(tesla);
+console.log(tesla.getCharge());
