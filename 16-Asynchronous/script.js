@@ -2,16 +2,10 @@
 
 const btn = document.querySelector(".btn-country");
 const countriesContainer = document.querySelector(".countries");
+// const imageContainer = document.querySelector(".images");
 
 ///////////////////////////////////////
 
-/**
- * Fetches JSON from the specified URL.
- *
- * @param {string} url - The URL to fetch JSON from.
- * @param {string} [errorMessage="Something went wrong"] - The error message to throw if the response is not OK.
- * @return {Promise} - A Promise that resolves to the parsed JSON response.
- */
 const getJSON = (url, errorMessage = "Something went wrong") => {
     return fetch(url).then((response) => {
         if (!response.ok) {
@@ -21,13 +15,6 @@ const getJSON = (url, errorMessage = "Something went wrong") => {
     });
 };
 
-/**
- * Render a country to the DOM.
- *
- * @param {Object} data - The country data.
- * @param {string} [className=""] - The class name for the country.
- * @return {undefined} No return value.
- */
 const renderCountry = (data, className = "") => {
     const html = `
     <article class="country ${className}">
@@ -49,15 +36,9 @@ const renderCountry = (data, className = "") => {
         `;
 
     countriesContainer.insertAdjacentHTML("beforeend", html);
-    // countriesContainer.style.opacity = 1;
+    countriesContainer.style.opacity = 1;
 };
 
-/**
- * Retrieves country data from the REST Countries API and renders it on the page.
- *
- * @param {string} country - The name of the country to retrieve data for.
- * @return {void} This function does not return a value.
- */
 const getCountryData = (country) => {
     getJSON(
         `https://restcountries.com/v3.1/name/${country}?fullText=true`,
@@ -84,6 +65,11 @@ const getCountryData = (country) => {
         .finally(() => {
             countriesContainer.style.opacity = 1;
         });
+};
+
+const renderError = (msg = "Something went wrong") => {
+    countriesContainer.insertAdjacentText("beforebegin", msg);
+    countriesContainer.style.opacity = 1;
 };
 
 /*
@@ -161,20 +147,7 @@ TEST COORDINATES 2: 19.037, 72.873
 TEST COORDINATES 2: -33.933, 18.474
 
 GOOD LUCK 😀
-*/
 
-/**
- * Initializes the function by getting the current geolocation coordinates and setting them to `curCoords`.
- * Also adds an event listener to a button that calls the `whereAmI` function with the current coordinates.
- *
- * @param {object} pos - The position object containing the coordinates.
- * @param {number} pos.coords.latitude - The latitude coordinate.
- * @param {number} pos.coords.longitude - The longitude coordinate.
- * @param {function} btn.click - The event handler for the button click event.
- * @param {number} curCoords[0] - The latitude coordinate stored in an array.
- * @param {number} curCoords[1] - The longitude coordinate stored in an array.
- * @return {undefined} This function does not return any value.
- */
 const init = () => {
     navigator.geolocation.getCurrentPosition((pos) => {
         const { latitude, longitude } = pos.coords;
@@ -186,43 +159,203 @@ const init = () => {
     });
 };
 
-/**
- * Renders an error message on the page.
- *
- * @param {string} [msg="Something went wrong"] - The error message to display.
- * @return {undefined} This function does not return a value.
- */
-const renderError = (msg = "Something went wrong") => {
-    countriesContainer.insertAdjacentText("beforebegin", msg);
-    countriesContainer.style.opacity = 1;
-};
 
-/**
- * Retrieves the user's location information using the latitude and longitude coordinates.
- *
- * @param {number} lat - The latitude coordinate.
- * @param {number} lng - The longitude coordinate.
- * @return {void} This function does not return a value.
- */
+
 const whereAmI = (lat, lng) => {
     getJSON(`https://geocode.xyz/${lat},${lng}?geoit=json`)
-        .then((data) => {
-            if (!data.country) {
-                throw new Error("Your request are too quick!");
-            }
-
-            console.log(data);
-            console.log(`You are in ${data.city}, ${data.country}`);
-            console.log(`Your position: ${data.latt}, ${data.longt}`);
-            getCountryData(data.country);
-        })
-        .catch((error) => {
-            console.error(`Something went wrong, ${error}`);
-            renderError(`Something went wrong, ${error}`);
-        });
+    .then((data) => {
+        if (!data.country) {
+            throw new Error("Your request are too quick!");
+        }
+        
+        console.log(data);
+        console.log(`You are in ${data.city}, ${data.country}`);
+        console.log(`Your position: ${data.latt}, ${data.longt}`);
+        getCountryData(data.country);
+    })
+    .catch((error) => {
+        console.error(`Something went wrong, ${error}`);
+        renderError(`Something went wrong, ${error}`);
+    });
 };
 
 // whereAmI(52.508, 13.381);
 
 const curCoords = [];
 init();
+
+*/
+
+// console.log("Test start");
+// setTimeout(() => console.log("0 sec timer"), 0);
+// Promise.resolve("Resolved promise 1").then((res) => console.log(res));
+// console.log("Test end");
+
+////////////////////////////
+// Build simple promise
+/*
+const lotteryPromise = new Promise((resolve, reject) => {
+    console.log("Lottery draw is happening");
+
+    setTimeout(() => {
+        if (Math.random() >= 0.5) {
+            resolve("You WIN");
+        } else {
+            reject(new Error("You lose"));
+        }
+    }, 2000);
+});
+
+// lotteryPromisei
+//     .then((res) => console.log("res :>> ", res))
+//     .catch((error) => console.error(error));
+
+const wait = (seconds) => {
+    return new Promise((resolve) => {
+        setTimeout(resolve, seconds * 1000);
+    });
+};
+
+wait(2)
+    .then(() => {
+        console.log("I waited for two seconds");
+        return wait(1);
+    })
+    .then(() => {
+        console.log("I waited for one second");
+    });
+*/
+
+// Promisify geolocation
+/*
+
+
+getPosition()
+    .then((pos) => console.log(pos.coords))
+    .catch((error) => console.error(error));
+*/
+
+///////////////////////////////////////
+// Coding Challenge #2
+
+/* 
+Build the image loading functionality that I just showed you on the screen.
+
+Tasks are not super-descriptive this time, so that you can figure out some stuff on your own. Pretend you're working on your own 😉
+
+PART 1
+1. Create a function 'createImage' which receives imgPath as an input. This function returns a promise which creates a new image (use document.createElement('img')) and sets the .src attribute to the provided image path. When the image is done loading, append it to the DOM element with the 'images' class, and resolve the promise. The fulfilled value should be the image element itself. In case there is an error loading the image ('error' event), reject the promise.
+
+If this part is too tricky for you, just watch the first part of the solution.
+
+PART 2
+2. Comsume the promise using .then and also add an error handler;
+3. After the image has loaded, pause execution for 2 seconds using the wait function we created earlier;
+4. After the 2 seconds have passed, hide the current image (set display to 'none'), and load a second image (HINT: Use the image element returned by the createImage promise to hide the current image. You will need a global variable for that 😉);
+5. After the second image has loaded, pause execution for 2 seconds again;
+6. After the 2 seconds have passed, hide the current image.
+
+TEST DATA: Images in the img folder. Test the error handler by passing a wrong image path. Set the network speed to 'Fast 3G' in the dev tools Network tab, otherwise images load too fast.
+
+GOOD LUCK 😀
+
+const createImage = (imagePath) => {
+    return new Promise((resolve, reject) => {
+        const newImgTag = document.createElement("img");
+        newImgTag.src = imagePath;
+        
+        newImgTag.addEventListener("load", function () {
+            imageContainer.append(newImgTag);
+            resolve(newImgTag);
+        });
+        
+        newImgTag.addEventListener("error", function () {
+            reject(new Error("Image not found"));
+        });
+    });
+};
+const wait = (seconds) => {
+    return new Promise((resolve) => setTimeout(resolve, 1000 * seconds));
+};
+
+let imgElement;
+createImage("./img/img-1.jpg")
+.then((element) => {
+    imgElement = element;
+    console.log("image loaded");
+    return wait(2);
+})
+.then(() => {
+    imgElement.style.display = "none";
+    return createImage("./img/img-2.jpg");
+})
+.then((element) => {
+    imgElement = element;
+    return wait(2);
+})
+.then(() => (imgElement.style.display = "none"))
+.catch((error) => console.error(`Image load failed : ${error}`));
+
+*/
+
+const getPosition = () => {
+    return new Promise((resolve, reject) =>
+        navigator.geolocation.getCurrentPosition(resolve, reject)
+    );
+};
+
+const whereAmI = async () => {
+    // Geolocation
+
+    try {
+        const pos = await getPosition();
+        const { latitude, longitude } = pos.coords;
+
+        // Reverse geocoding
+        const resGeo = await fetch(
+            `https://geocode.xyz/${latitude},${longitude}?geoit=json`
+        );
+        if (!resGeo.ok) {
+            throw new Error("Problem getting location data");
+        }
+
+        const dataGeo = await resGeo.json();
+
+        // Country data
+        const response = await fetch(
+            `https://restcountries.com/v3.1/name/${dataGeo.country}?fullText=true`
+        );
+
+        if (!response.ok) {
+            throw new Error("Problem getting country");
+        }
+
+        const data = await response.json();
+        renderCountry(data[0]);
+
+        return `You are in ${dataGeo.city}, ${dataGeo.country}`;
+    } catch (error) {
+        renderError(`${error.message}`);
+
+        // Reject promise return from async function
+        throw error;
+    }
+};
+
+console.log("1");
+
+whereAmI()
+    .then((data) => console.log(data))
+    .catch((error) => console.error(error));
+console.log("3");
+
+(async function () {
+    try {
+        const data = await whereAmI();
+        console.log(data);
+    } catch (error) {
+        console.log(error);
+    } finally {
+        console.log("get location!");
+    }
+})();
