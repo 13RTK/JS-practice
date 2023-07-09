@@ -2,7 +2,7 @@
 
 const btn = document.querySelector(".btn-country");
 const countriesContainer = document.querySelector(".countries");
-// const imageContainer = document.querySelector(".images");
+const imageContainer = document.querySelector(".images");
 
 ///////////////////////////////////////
 
@@ -70,6 +70,26 @@ const getCountryData = (country) => {
 const renderError = (msg = "Something went wrong") => {
     countriesContainer.insertAdjacentText("beforebegin", msg);
     countriesContainer.style.opacity = 1;
+};
+
+const createImage = (imagePath) => {
+    return new Promise((resolve, reject) => {
+        const newImgTag = document.createElement("img");
+        newImgTag.src = imagePath;
+
+        newImgTag.addEventListener("load", function () {
+            imageContainer.append(newImgTag);
+            resolve(newImgTag);
+        });
+
+        newImgTag.addEventListener("error", function () {
+            reject(new Error("Image not found"));
+        });
+    });
+};
+
+const wait = async (seconds) => {
+    return new Promise((resolve) => setTimeout(resolve, 1000 * seconds));
 };
 
 /*
@@ -296,7 +316,6 @@ createImage("./img/img-1.jpg")
 .then(() => (imgElement.style.display = "none"))
 .catch((error) => console.error(`Image load failed : ${error}`));
 
-*/
 
 const getPosition = () => {
     return new Promise((resolve, reject) =>
@@ -359,3 +378,117 @@ console.log("3");
         console.log("get location!");
     }
 })();
+
+*/
+
+///////////////////////////////////////
+// Promise all
+/*
+const get3Country = async (country1, country2, country3) => {
+    try {
+        const data = await Promise.all([
+            getJSON(
+                `https://restcountries.com/v3.1/name/${country1}?fullText=true`
+            ),
+            getJSON(
+                `https://restcountries.com/v3.1/name/${country2}?fullText=true`
+            ),
+            getJSON(
+                `https://restcountries.com/v3.1/name/${country3}?fullText=true`
+            ),
+        ]);
+
+        console.log(data.map((data) => data[0].capital));
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+get3Country("china", "portugal", "canada");
+*/
+
+///////////////////////////////////////
+// Other promise combinator
+/*
+const timeout = async (sec) => {
+    return new Promise((_, reject) => {
+        setTimeout(() => {
+            reject("Request too quick");
+        }, sec * 1000);
+    });
+};
+
+// Promise.race([
+//     getJSON(`https://restcountries.com/v3.1/name/China?fullText=true`),
+//     timeout(1),
+// ])
+//     .then((res) => console.log(res[0]))
+//     .catch((err) => console.log(err));
+
+Promise.allSettled([
+    getJSON(`https://restcountries.com/v3.1/name/China?fullText=true`),
+    timeout(1),
+])
+    .then((res) => console.log(res))
+    .catch((err) => console.log(err));
+
+Promise.any([
+    getJSON(`https://restcountries.com/v3.1/name/China?fullText=true`),
+    timeout(1),
+])
+    .then((res) => console.log(res))
+    .catch((err) => console.log(err));
+*/
+
+///////////////////////////////////////
+// Coding Challenge #3
+
+/* 
+PART 1
+Write an async function 'loadNPause' that recreates Coding Challenge #2, this time using async/await (only the part where the promise is consumed). Compare the two versions, think about the big differences, and see which one you like more.
+Don't forget to test the error handler, and to set the network speed to 'Fast 3G' in the dev tools Network tab.
+
+PART 2
+1. Create an async function 'loadAll' that receives an array of image paths 'imgArr';
+2. Use .map to loop over the array, to load all the images with the 'createImage' function (call the resulting array 'imgs')
+3. Check out the 'imgs' array in the console! Is it like you expected?
+4. Use a promise combinator function to actually get the images from the array 😉
+5. Add the 'paralell' class to all the images (it has some CSS styles).
+
+TEST DATA: ['img/img-1.jpg', 'img/img-2.jpg', 'img/img-3.jpg']. To test, turn off the 'loadNPause' function.
+
+GOOD LUCK 😀
+*/
+
+// Part1
+// const loadNPause = async (sec) => {
+//     try {
+//         let imgElement = await createImage("./img/img-1.jpg");
+//         console.log("Image 1 loaded");
+//         await wait(sec);
+//         imgElement.style.display = "none";
+
+//         imgElement = await createImage("./img/img-2.jpg");
+//         console.log("Image 2 loaded");
+//         await wait(sec);
+//         imgElement.style.display = "none";
+//     } catch (error) {
+//         console.error(error);
+//     }
+// };
+// loadNPause(2);
+
+// Part 2
+const loadAll = async (imgArr) => {
+    try {
+        const imgs = await imgArr.map(async (img) => await createImage(img));
+        const imgElements = await Promise.all(imgs);
+        imgElements.forEach((img) => img.classList.add("parallel"));
+
+        console.log(imgs);
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+loadAll(["img/img-1.jpg", "img/img-2.jpg", "img/img-3.jpg"]);
