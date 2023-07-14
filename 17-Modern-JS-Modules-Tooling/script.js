@@ -1,4 +1,4 @@
-import * as ShoppingCart from "./ShoppingCart.js";
+// import * as ShoppingCart from "./ShoppingCart.js";
 // import cloneDeep from "./node_modules/lodash-es/cloneDeep.js";
 import { cloneDeep } from "lodash-es";
 
