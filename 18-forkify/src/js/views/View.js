@@ -14,6 +14,44 @@ export default class View {
         this._parentElement.insertAdjacentHTML("afterbegin", markup);
     }
 
+    update(data) {
+        // if (!data || (Array.isArray(data) && data.length === 0)) {
+        //     return this.renderError();
+        // }
+
+        this._data = data;
+        const newMarkup = this._generateMarkup();
+
+        // Convert string to DOM object
+        const newDOM = document
+            .createRange()
+            .createContextualFragment(newMarkup);
+        const newElements = Array.from(newDOM.querySelectorAll("*"));
+        const curElements = Array.from(
+            this._parentElement.querySelectorAll("*")
+        );
+
+        newElements.forEach((newElement, idx) => {
+            const curElement = curElements[idx];
+
+            // Only work on text
+            if (
+                !curElement.isEqualNode(newElement) &&
+                newElement.firstChild.nodeValue.trim() !== ""
+            ) {
+                // console.log(newElement.firstChild.nodeValue.trim());
+                curElement.textContent = newElement.textContent;
+            }
+
+            // Update dataset/attribute of element
+            if (!curElement.isEqualNode(newElement)) {
+                Array.from(newElement.attributes).forEach((attribute) =>
+                    curElement.setAttribute(attribute.name, attribute.value)
+                );
+            }
+        });
+    }
+
     _clear() {
         this._parentElement.innerHTML = "";
     }
@@ -22,7 +60,7 @@ export default class View {
         const markup = `
             <div class="spinner">
                 <svg>
-                <use href="${icons}#icon-loader"></use>
+                    <use href="${icons}#icon-loader"></use>
                 </svg>
             </div>
         `;
