@@ -2,7 +2,7 @@ import icons from "url:../../img/icons.svg";
 
 export default class View {
     _data;
-    render(data) {
+    render(data, render = true) {
         if (!data || (Array.isArray(data) && data.length === 0)) {
             return this.renderError();
         }
@@ -10,15 +10,15 @@ export default class View {
         this._data = data;
         const markup = this._generateMarkup();
 
+        if (!render) {
+            return markup;
+        }
+
         this._clear();
         this._parentElement.insertAdjacentHTML("afterbegin", markup);
     }
 
     update(data) {
-        // if (!data || (Array.isArray(data) && data.length === 0)) {
-        //     return this.renderError();
-        // }
-
         this._data = data;
         const newMarkup = this._generateMarkup();
 
@@ -36,15 +36,15 @@ export default class View {
 
             // Only work on text
             if (
-                !curElement.isEqualNode(newElement) &&
-                newElement.firstChild.nodeValue.trim() !== ""
+                !newElement.isEqualNode(curElement) &&
+                newElement.firstChild?.nodeValue.trim() !== ""
             ) {
                 // console.log(newElement.firstChild.nodeValue.trim());
                 curElement.textContent = newElement.textContent;
             }
 
             // Update dataset/attribute of element
-            if (!curElement.isEqualNode(newElement)) {
+            if (!newElement.isEqualNode(curElement)) {
                 Array.from(newElement.attributes).forEach((attribute) =>
                     curElement.setAttribute(attribute.name, attribute.value)
                 );
